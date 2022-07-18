@@ -1,0 +1,15 @@
+@import url('http://fonts.cdnfonts.com/css/gotham');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#app {
+    font-family: 'gotham', sans-serif;
+}
+
+@layer utilities {
+    .center {
+        @apply absolute top-[50%] left-[50%]  ;
+        transform: translateX(-50%) translateY(-50%);
+        }
+}
