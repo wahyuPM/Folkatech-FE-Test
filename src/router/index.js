@@ -1,14 +1,33 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import HomeView from '../views/HomeView.vue'
+import LoginLayout from '../views/layouts/LoginLayout.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'login',
-    component: () => import('../views/login/LoginPage.vue')
+    name: 'login&register',
+    component: LoginLayout,
+    children: [
+      {
+        path: '/',
+        name: 'login',
+        component: () => import('../views/login/LoginPage.vue'),
+        meta: {
+          title: "Login"
+        }
+      },
+      {
+        path: '/register',
+        name: 'register',
+        component: () => import('../views/register/RegisterPage.vue'),
+        meta: {
+          title: "Register"
+        }
+      }
+    ]
   },
   // {
   //   path: '/about',
