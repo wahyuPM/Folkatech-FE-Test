@@ -1,7 +1,7 @@
 <template>
   <div class="fixed top-0 w-full bg-white z-10">
     <div class="container mx-auto">
-      <div class="bg-white px-6 py-10 flex justify-end items-center">
+      <div class="bg-white px-6 py-8 flex justify-end items-center">
         <div class="w-[30%] mx-6">
           <form>
             <div class="flex">
@@ -155,9 +155,6 @@
       <button class="bg-[#EB3F36] uppercase h-full px-10 text-white">
         Belanja
       </button>
-    </div>
-    <div class="bg-white px-8 py-8 w-full">
-      <a href="">Home >></a>
     </div>
   </div>
 </template>

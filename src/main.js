@@ -14,10 +14,10 @@ Vue.prototype.$assets_url = process.env.VUE_APP_ASSETS_URL
 require('@/assets/tailwind.css')
 
 //Define Global Authorization Header Token
-// const auth = JSON.parse(localStorage.getItem('auth'));
-// if (auth) {
-//   Vue.prototype.$http.defaults.headers.common['Authorization'] = `Bearer ` + auth.token
-// }
+const auth = JSON.parse(localStorage.getItem('auth'));
+if (auth) {
+  Vue.prototype.$http.defaults.headers.common['Authorization'] = `Bearer ` + auth.token
+}
 
 new Vue({
   router,

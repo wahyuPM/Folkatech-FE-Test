@@ -73,7 +73,11 @@
                 leading-5
               "
             >
-              <button @click.prevent="toggleShow" class="text-[#730C07]">
+              <button
+                @click.prevent="toggleShow"
+                type="button"
+                class="text-[#730C07]"
+              >
                 {{ !showPassword ? "Show" : "Hide" }}
               </button>
             </div>

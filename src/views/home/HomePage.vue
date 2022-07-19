@@ -1,14 +1,14 @@
 <template>
-  <section class="container mx-auto h-screen my-6">
-    <div class="grid grid-cols-12 gap-2 h-full">
-      <div class="col-start-1 col-end-4 h-full px-2">
+  <section class="container mx-auto my-6">
+    <div class="grid grid-cols-12 grid-rows-2 gap-2">
+      <div class="col-start-1 col-end-4 h-full px-2 row-span-2">
         <Accordion title="Urutkan Berdasarkan">
           <Accordion title="Origin">
             <div class="flex flex-col px-2">
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center">
                   <input
-                    id="default-checkbox"
+                    id="1"
                     type="checkbox"
                     value=""
                     class="
@@ -25,7 +25,7 @@
                     "
                   />
                   <label
-                    for="default-checkbox"
+                    for="1"
                     class="
                       ml-2
                       text-sm
@@ -41,7 +41,7 @@
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center">
                   <input
-                    id="default-checkbox"
+                    id="2"
                     type="checkbox"
                     value=""
                     class="
@@ -58,7 +58,7 @@
                     "
                   />
                   <label
-                    for="default-checkbox"
+                    for="2"
                     class="
                       ml-2
                       text-sm
@@ -215,7 +215,7 @@
           </Accordion>
         </Accordion>
       </div>
-      <div class="col-start-4 col-end-13 px-4">
+      <div class="col-start-4 col-end-13 px-4 row-span-2">
         <div class="flex justify-between">
           <div class="flex gap-4 items-center">
             <p>Menampilkan</p>
@@ -237,15 +237,78 @@
             </select>
           </div>
         </div>
+        <div class="grid grid-cols-6 mt-4 gap-2 h-[30rem] overflow-y-auto">
+          <div v-for="(row, index) in products" :key="index" class="col-span-2">
+            <Product :data="row" />
+          </div>
+        </div>
       </div>
     </div>
   </section>
 </template>
 <script>
 import Accordion from "@/components/accordion/AccordionComponent.vue";
+import Product from "@/components/product/ProductComponent.vue";
+import swal from "sweetalert";
 export default {
   components: {
     Accordion,
+    Product,
+  },
+  data() {
+    return {
+      products: [],
+      params: {
+        page: 1,
+        limit: 10,
+        price: "",
+        order: "product_name,ASC",
+      },
+      errors: [],
+    };
+  },
+  methods: {
+    async getData() {
+      try {
+        this.$emit("loading", (this.isLoading = true));
+        let params = new URLSearchParams();
+        params.append("page", this.params.page);
+        params.append("limit", this.params.limit);
+        params.append("price", this.params.price);
+        params.append("order", this.params.order);
+
+        let request = {
+          params: params,
+        };
+        let response = await this.$http.get(
+          `${this.$api_url}/product`,
+          request
+        );
+
+        if (response) {
+          this.$emit("loading", (this.isLoading = false));
+          this.products = response.data.data.list;
+
+          if (this.products.length == []) {
+            swal({
+              title: "Warning!",
+              text: `Data not found!`,
+              icon: "warning",
+              buttons: "OK",
+              closeOnClickOutside: false,
+            });
+            return;
+          }
+        }
+      } catch (error) {
+        this.$emit("loading", (this.isLoading = false));
+        this.errors = error.response.data.errors;
+        console.log(error);
+      }
+    },
+  },
+  mounted() {
+    this.getData();
   },
 };
 </script>

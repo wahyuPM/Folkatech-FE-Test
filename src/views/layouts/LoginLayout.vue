@@ -20,7 +20,6 @@ export default {
     async LoadingScreen(value) {
       try {
         this.isLoading = value;
-        console.log(this.isLoading); // someValue
       } catch (error) {
         console.log(error);
       }
