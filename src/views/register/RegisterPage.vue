@@ -1,21 +1,18 @@
 <template>
-  <div class="center md:w-[30%] rounded-lg shadow p-5 bg-white">
+  <div class="center w-[80%] md:w-[30%] rounded-lg shadow p-5 bg-white">
     <h2 v-if="!nextForm" class="text-2xl font-bold text-[#730C07]">
       Daftar Sekarang
     </h2>
-    <button
-      v-else
-      @click.prevent="toggleNextForm"
-      class="font-bold text-[#730C07]"
-    >
-      Kembali
+    <button v-else @click.prevent="toggleBack" class="font-bold text-[#730C07]">
+      &#8678; Kembali
     </button>
-    <form class="mt-4">
+    <form @submit.prevent="register" class="mt-4">
       <div class="mx-auto max-w-lg">
         <!-- Start: First Form -->
         <div v-if="!nextForm">
           <div class="py-2">
             <input
+              v-model="firstName"
               placeholder="Nama Depan"
               type="text"
               class="
@@ -38,6 +35,7 @@
           </div>
           <div class="py-2">
             <input
+              v-model="lastName"
               placeholder="Nama Belakang"
               type="text"
               class="
@@ -60,6 +58,7 @@
           </div>
           <div class="py-2 mb-4">
             <input
+              v-model="form.email"
               placeholder="Email"
               type="email"
               class="
@@ -78,7 +77,16 @@
                 focus:border-gray-600
                 focus:outline-none
               "
+              :class="{
+                'border-red-500': errors.email,
+              }"
             />
+            <span
+              v-for="index in errors.email"
+              :key="index"
+              class="text-[#730C07]"
+              >{{ errors.email[0] }}</span
+            >
           </div>
         </div>
         <!-- End: First Form -->
@@ -86,6 +94,7 @@
         <div v-else>
           <div class="py-2">
             <input
+              v-model="form.phone"
               placeholder="Nomor Telepon"
               type="number"
               class="
@@ -109,6 +118,7 @@
           <div class="py-2">
             <div class="relative">
               <input
+                v-model="form.password"
                 placeholder="Password"
                 :type="!showPassword ? 'password' : 'text'"
                 class="
@@ -145,10 +155,17 @@
                 </button>
               </div>
             </div>
+            <span
+              v-for="index in errors.password"
+              :key="index"
+              class="text-[#730C07]"
+              >{{ errors.password[0] }}</span
+            >
           </div>
           <div class="py-2 mb-4">
             <div class="relative">
               <input
+                v-model="confirmPassword"
                 placeholder="Konfirmasi Password"
                 :type="!showConfirmPass ? 'password' : 'text'"
                 class="
@@ -185,6 +202,12 @@
                 </button>
               </div>
             </div>
+            <span
+              v-for="index in errors.password"
+              :key="index"
+              class="text-[#730C07]"
+              >{{ errors.password[0] }}</span
+            >
           </div>
         </div>
         <!-- End: Second Form -->
@@ -244,30 +267,87 @@
   </div>
 </template>
 <script>
+import swal from "sweetalert";
 export default {
   data() {
     return {
       nextForm: false,
       showPassword: false,
       showConfirmPass: false,
+      firstName: "",
+      lastName: "",
+      confirmPassword: "",
       form: {
-        firstName: null,
-        lastName: null,
-        email: null,
-        phone: null,
-        password: null,
+        name: "",
+        email: "",
+        phone: "",
+        password: "",
       },
+      errors: [],
+      isLoading: false,
     };
+  },
+  watch: {
+    firstName: function (val) {
+      this.form.name = val + " " + this.lastName;
+    },
+    lastName: function (val) {
+      this.form.name = this.firstName + " " + val;
+    },
   },
   methods: {
     toggleNextForm() {
-      this.nextForm = !this.nextForm;
+      if (this.firstName && this.lastName && this.form.email) {
+        this.nextForm = true;
+      } else {
+        swal("Oops...", "Lengkapi form terlebih dahulu!", "error");
+      }
+    },
+    toggleBack() {
+      this.nextForm = false;
     },
     toggleShow() {
       this.showPassword = !this.showPassword;
     },
     toggleShow2() {
       this.showConfirmPass = !this.showConfirmPass;
+    },
+    async register() {
+      try {
+        if (this.confirmPassword === this.form.password) {
+          this.$emit("loading", (this.isLoading = true));
+          const response = await this.$http.post(`${this.$api_url}/register`, {
+            ...this.form,
+          });
+
+          if (response) {
+            this.$emit("loading", (this.isLoading = false));
+            swal({
+              title: "Berhasil!",
+              text: "Berhasil mendaftar",
+              icon: "success",
+              button: "OK",
+            }).then((status) => {
+              if (status === true) {
+                this.$router.push("/");
+              }
+            });
+          }
+        } else {
+          swal("Oops...", "Konfirmasi password tidak sama!", "error");
+        }
+      } catch (error) {
+        this.$emit("loading", (this.isLoading = false));
+        if (error.response.status === 400) {
+          this.errors = error.response.data.data;
+          this.nextForm = false;
+        }
+        swal({
+          title: "Error!",
+          text: `${error.response.data.message}, silahkan cek form anda!`,
+          icon: "error",
+        });
+      }
     },
   },
 };
