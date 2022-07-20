@@ -3,6 +3,65 @@
     <div class="grid grid-cols-12 grid-rows-2 gap-2">
       <div class="col-start-1 col-end-4 h-full px-2 row-span-2">
         <Accordion title="Urutkan Berdasarkan">
+          <div class="flex flex-col gap-4 px-2 mb-4">
+            <label for="">Harga</label>
+            <vue-slider
+              v-model="params.price"
+              :min="5000"
+              :max="200000"
+              :order="false"
+              :lazy="true"
+            >
+              <template v-slot:tooltip="{ value }">
+                <div class="w-max rounded-md bg-[#EB3F36] p-2 text-white">
+                  {{ value | formatCurrency }}
+                </div>
+              </template>
+            </vue-slider>
+            <div class="w-full">
+              <form
+                @submit.prevent="onchangePrice"
+                action=""
+                class="flex items-center justify-center gap-2"
+              >
+                <div class="flex items-center gap-2">
+                  <label class="text-xs" for="price1">Rp</label>
+                  <input
+                    id="price1"
+                    class="
+                      bg-[#F2F2F2]
+                      p-2
+                      flex-auto
+                      block
+                      w-full
+                      text-xs
+                      focus:outline-none
+                    "
+                    type="number"
+                    v-model.lazy="params.price[0]"
+                  />
+                </div>
+                <div class="flex items-center gap-2">
+                  <label class="text-xs" for="price2">Rp</label>
+                  <input
+                    id="price2"
+                    class="
+                      bg-[#F2F2F2]
+                      p-2
+                      flex-auto
+                      block
+                      w-full
+                      text-xs
+                      focus:outline-none
+                    "
+                    type="number"
+                    v-model.lazy="params.price[1]"
+                  />
+                </div>
+                <button class="hidden" type="submit"></button>
+              </form>
+            </div>
+          </div>
           <Accordion title="Origin">
             <div class="flex flex-col px-2">
               <div class="flex items-center justify-between mb-4">
@@ -78,7 +137,7 @@
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center">
                   <input
-                    id="default-checkbox"
+                    id="3"
                     type="checkbox"
                     value=""
                     class="
@@ -95,7 +154,7 @@
                     "
                   />
                   <label
-                    for="default-checkbox"
+                    for="3"
                     class="
                       ml-2
                       text-sm
@@ -111,7 +170,7 @@
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center">
                   <input
-                    id="default-checkbox"
+                    id="4"
                     type="checkbox"
                     value=""
                     class="
@@ -128,7 +187,7 @@
                     "
                   />
                   <label
-                    for="default-checkbox"
+                    for="4"
                     class="
                       ml-2
                       text-sm
@@ -148,7 +207,7 @@
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center">
                   <input
-                    id="default-checkbox"
+                    id="5"
                     type="checkbox"
                     value=""
                     class="
@@ -165,7 +224,7 @@
                     "
                   />
                   <label
-                    for="default-checkbox"
+                    for="5"
                     class="
                       ml-2
                       text-sm
@@ -181,7 +240,7 @@
               <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center">
                   <input
-                    id="default-checkbox"
+                    id="6"
                     type="checkbox"
                     value=""
                     class="
@@ -198,7 +257,7 @@
                     "
                   />
                   <label
-                    for="default-checkbox"
+                    for="6"
                     class="
                       ml-2
                       text-sm
@@ -229,7 +288,7 @@
               <option value="10">10</option>
               <option value="20">20</option>
             </select>
-            <p>dari 100</p>
+            <p>dari {{ total }}</p>
           </div>
           <div class="flex gap-4 items-center">
             <p>Urutkan</p>
@@ -246,7 +305,17 @@
             </select>
           </div>
         </div>
-        <div class="grid grid-cols-6 mt-4 gap-2 h-[30rem] overflow-y-auto">
+        <div
+          class="
+            grid grid-cols-6
+            mt-4
+            gap-2
+            h-[35rem]
+            overflow-y-auto
+            py-2
+            scroll
+          "
+        >
           <div
             v-for="(row, index) in productItems"
             :key="index"
@@ -264,6 +333,7 @@ import Accordion from "@/components/accordion/AccordionComponent.vue";
 import Product from "@/components/product/ProductComponent.vue";
 import swal from "sweetalert";
 import { mapGetters, mapActions } from "vuex";
+import formatCurrency from "@/helper/formatCurrency";
 export default {
   components: {
     Accordion,
@@ -271,6 +341,7 @@ export default {
   },
   computed: {
     ...mapGetters(["productItems"]),
+    ...mapGetters(["total"]),
   },
   created() {
     this.$store.dispatch("getProductItems");
@@ -282,7 +353,10 @@ export default {
     "params.order": function () {
       this.getData();
     },
-    products: function () {
+    "params.price": function () {
+      this.getData();
+    },
+    products() {
       this.filterProduct();
     },
   },
@@ -292,7 +366,7 @@ export default {
       params: {
         page: 1,
         limit: 10,
-        price: "",
+        price: [5000, 100000],
         order: "product_name,ASC",
       },
       errors: [],
@@ -303,13 +377,16 @@ export default {
     filterProduct() {
       this.updateProductList(this.products);
     },
+    onchangePrice() {
+      this.getData();
+    },
     async getData() {
       try {
         this.$emit("loading", (this.isLoading = true));
         let params = new URLSearchParams();
         params.append("page", this.params.page);
         params.append("limit", this.params.limit);
-        params.append("price", this.params.price);
+        params.append("price", this.params.price.toString());
         params.append("order", this.params.order);
 
         let request = {
@@ -342,5 +419,15 @@ export default {
       }
     },
   },
+  filters: {
+    formatCurrency: function (value) {
+      return formatCurrency(value);
+    },
+  },
 };
 </script>
+<style lang="css">
+.vue-slider-process {
+  background-color: #eb3f36;
+}
+</style>

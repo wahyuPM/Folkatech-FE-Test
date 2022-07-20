@@ -3,7 +3,7 @@
     <Header />
     <div class="p-[80px] mb-2"></div>
     <div class="bg-white px-10 py-8 w-full">
-      <a href="">Home >></a>
+      <router-link to="/home">Home >></router-link>
     </div>
     <router-view @loading="LoadingScreen"></router-view>
     <vue-element-loading :active="isLoading" is-full-screen />

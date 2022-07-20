@@ -42,6 +42,15 @@ const routes = [
           title: "Home",
           requiresAuth: true,
         }
+      },
+      {
+        path: '/detail/:product_name/:id',
+        name: 'detail',
+        component: () => import('../views/detail/DetailPage.vue'),
+        meta: {
+          title: "Detail",
+          requiresAuth: true,
+        }
       }
     ]
   }

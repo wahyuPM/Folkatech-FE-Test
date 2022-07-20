@@ -65,8 +65,8 @@
           </form>
         </div>
         <div class="flex gap-6">
-          <a href=""><img src="@/assets/img/heart.png" alt="" /></a>
-          <a href=""><img src="@/assets/img/shopping-bag.png" alt="" /></a>
+          <a href=""><img src="@/assets/img/heart.png" alt="heart" /></a>
+          <a href=""><img src="@/assets/img/shopping-bag.png" alt="cart" /></a>
           <div class="relative">
             <div>
               <button
@@ -85,20 +85,9 @@
                 aria-haspopup="true"
               >
                 <span class="sr-only">Open user menu</span>
-                <img src="@/assets/img/user.png" alt="" />
+                <img src="@/assets/img/user.png" alt="profile" />
               </button>
             </div>
-
-            <!--
-                Dropdown menu, show/hide based on menu state.
-
-                Entering: "transition ease-out duration-100"
-                  From: "transform opacity-0 scale-95"
-                  To: "transform opacity-100 scale-100"
-                Leaving: "transition ease-in duration-75"
-                  From: "transform opacity-100 scale-100"
-                  To: "transform opacity-0 scale-95"
-              -->
             <div
               :class="showDropdown ? 'block' : 'hidden'"
               class="
@@ -151,7 +140,7 @@
         </div>
       </div>
     </div>
-    <div class="h-[64px] pl-10 w-full bg-slate-300">
+    <div class="h-[64px] pl-10 w-full bg-[#F5F5F5]">
       <button class="bg-[#EB3F36] uppercase h-full px-10 text-white">
         Belanja
       </button>

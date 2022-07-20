@@ -3,7 +3,10 @@ import App from './App.vue'
 import router from './router'
 import axios from 'axios'
 import store from './store'
+import VueSlider from 'vue-slider-component'
+import 'vue-slider-component/theme/default.css'
 
+Vue.component('VueSlider', VueSlider)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios;
