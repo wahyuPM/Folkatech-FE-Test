@@ -219,26 +219,39 @@
         <div class="flex justify-between">
           <div class="flex gap-4 items-center">
             <p>Menampilkan</p>
-            <select name="" id="" class="border rounded p-1">
-              <option value="">10</option>
-              <option value="">20</option>
-              <option value="">30</option>
-              <option value="">40</option>
-              <option value="">50</option>
+            <select
+              v-model="params.limit"
+              name=""
+              id=""
+              class="border rounded p-1"
+            >
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="20">20</option>
             </select>
             <p>dari 100</p>
           </div>
           <div class="flex gap-4 items-center">
             <p>Urutkan</p>
-            <select name="" id="" class="border rounded p-1">
-              <option value="">Nama Produk</option>
-              <option value="">Harga</option>
-              <option value="">Tanggal</option>
+            <select
+              v-model="params.order"
+              name=""
+              id=""
+              class="border rounded p-1"
+            >
+              <option selected value="product_name,ASC">Nama Produk</option>
+              <option value="price,ASC">Harga Terendah</option>
+              <option value="price,DESC">Harga Tertinggi</option>
+              <option value="date,ASC">Tanggal</option>
             </select>
           </div>
         </div>
         <div class="grid grid-cols-6 mt-4 gap-2 h-[30rem] overflow-y-auto">
-          <div v-for="(row, index) in products" :key="index" class="col-span-2">
+          <div
+            v-for="(row, index) in productItems"
+            :key="index"
+            class="col-span-2"
+          >
             <Product :data="row" />
           </div>
         </div>
@@ -250,10 +263,28 @@
 import Accordion from "@/components/accordion/AccordionComponent.vue";
 import Product from "@/components/product/ProductComponent.vue";
 import swal from "sweetalert";
+import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
     Accordion,
     Product,
+  },
+  computed: {
+    ...mapGetters(["productItems"]),
+  },
+  created() {
+    this.$store.dispatch("getProductItems");
+  },
+  watch: {
+    "params.limit": function () {
+      this.getData();
+    },
+    "params.order": function () {
+      this.getData();
+    },
+    products: function () {
+      this.filterProduct();
+    },
   },
   data() {
     return {
@@ -268,6 +299,10 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["updateProductList"]),
+    filterProduct() {
+      this.updateProductList(this.products);
+    },
     async getData() {
       try {
         this.$emit("loading", (this.isLoading = true));
@@ -306,9 +341,6 @@ export default {
         console.log(error);
       }
     },
-  },
-  mounted() {
-    this.getData();
   },
 };
 </script>

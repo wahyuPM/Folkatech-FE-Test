@@ -7,6 +7,7 @@
             <div class="flex">
               <div class="relative w-full">
                 <input
+                  v-model="search"
                   type="search"
                   id="search-dropdown"
                   class="
@@ -23,7 +24,6 @@
                     focus:placeholder-gray-500 focus:bg-white focus:outline-none
                   "
                   placeholder="Search "
-                  required=""
                 />
                 <button
                   type="submit"
@@ -163,6 +163,7 @@ export default {
   data() {
     return {
       showDropdown: false,
+      search: "",
     };
   },
   methods: {
