@@ -55,7 +55,12 @@ export default {
   methods: {
     detailProduct() {
       this.$router.push({
-        path: `/detail/${this.data.product_type.name}/${this.data.id}`,
+        name: "Detail",
+        params: {
+          id: this.data.id,
+          product_slug: this.data.product_type.slug,
+          name: this.data.product_type.name,
+        },
       });
     },
     onImgLoad() {

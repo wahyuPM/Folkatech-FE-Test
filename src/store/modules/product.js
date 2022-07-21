@@ -48,7 +48,8 @@ const getters = {
     total: state => state.total,
     productItemById: (state) => (id) => {
         return state.productItems.find(productItem => productItem.id == id)
-    }
+    },
+    keyword: state => state.keyword
 }
 
 const productModule = {

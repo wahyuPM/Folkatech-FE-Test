@@ -65,8 +65,8 @@
           </form>
         </div>
         <div class="flex gap-6">
-          <a href=""><img src="@/assets/img/heart.png" alt="heart" /></a>
-          <a href=""><img src="@/assets/img/shopping-bag.png" alt="cart" /></a>
+          <a href="#"><img src="@/assets/img/heart.png" alt="heart" /></a>
+          <a href="#"><img src="@/assets/img/shopping-bag.png" alt="cart" /></a>
           <div class="relative">
             <div>
               <button
@@ -168,6 +168,7 @@ export default {
     ...mapActions({
       updateProductList: "updateProductList",
       updateTotal: "updateTotal",
+      updateKeyword: "updateKeyword",
     }),
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
@@ -196,10 +197,11 @@ export default {
           let total = response.data.data.total;
           this.updateProductList(products);
           this.updateTotal(total);
+          this.updateKeyword(this.params.keyword);
 
-          // if (this.$route.path !== "/produk") {
-          //   this.$router.push("/produk");
-          // }
+          if (this.$router.path !== "/produk") {
+            this.$router.push("/produk");
+          }
 
           if (products.length == []) {
             swal({

@@ -53,14 +53,14 @@ const routes = [
         }
       },
       {
-        path: '/detail/:product_name/:id',
+        path: '/detail/:product_slug/:id',
         name: 'Detail',
         component: () => import('../views/detail/DetailPage.vue'),
         meta: {
           title: "Detail",
           requiresAuth: true,
           breadcrumb() {
-            const name = this.$route.params.product_name;
+            const name = this.$route.params.name;
 
             return {
               label: name,

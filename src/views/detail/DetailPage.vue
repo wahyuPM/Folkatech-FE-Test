@@ -1,16 +1,30 @@
 <template>
-  <div class="container mx-auto px-8">
+  <div class="container mx-auto px-8 my-6">
     <div class="grid grid-cols-12 grid-flow-dense h-max gap-2">
       <div class="col-start-1 col-end-6">
-        <div class="border border-[#D8D8D8] flex justify-center items-center">
+        <div
+          class="
+            border border-[#D8D8D8]
+            flex
+            justify-center
+            items-center
+            min-h-[30rem]
+            bg-gray-400
+          "
+        >
+          <vue-element-loading :active="!isLoaded" />
           <img
             v-if="image_default === ''"
+            v-show="isLoaded"
+            @load="onImgLoad"
             :src="detail.images[0].image_url"
             :alt="detail.images[0].id"
             class="h-auto w-full"
           />
           <img
             v-else
+            v-show="isLoaded"
+            @load="onImgLoad"
             :src="image_default"
             :alt="image_default"
             class="h-auto w-full"
@@ -33,7 +47,13 @@
                   cursor-pointer
                 "
               >
-                <img class="h-auto w-[80%]" :src="index" :alt="index" />
+                <img
+                  v-show="isLoaded"
+                  @load="onImgLoad"
+                  class="h-auto w-[80%]"
+                  :src="index"
+                  :alt="index"
+                />
               </div>
             </slide>
             <hooper-navigation slot="hooper-addons"></hooper-navigation>
@@ -175,6 +195,30 @@
           </div>
         </div>
       </div>
+      <div class="col-start-1 col-end-13">
+        <div class="flex items-center justify-center">
+          <h2
+            class="
+              text-2xl
+              font-bold
+              pb-6
+              uppercase
+              relative
+              after:content-['']
+              after:absolute
+              after:bottom-0
+              after:left-[50%]
+              after:translate-x-[-50%]
+              after:border-2
+              after:border-[#EB3F36]
+              after:w-[50%]
+            "
+          >
+            Rekomendasi Untuk Anda
+          </h2>
+        </div>
+        <div class="grid grid-cols-9"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -182,11 +226,13 @@
 import { Hooper, Slide, Navigation as HooperNavigation } from "hooper";
 import "hooper/dist/hooper.css";
 import formatCurrency from "@/helper/formatCurrency.js";
+import VueElementLoading from "vue-element-loading";
 export default {
   components: {
     Hooper,
     Slide,
     HooperNavigation,
+    VueElementLoading,
   },
   created() {
     this.detail = this.$store.getters.productItemById(this.$route.params.id);
@@ -201,6 +247,7 @@ export default {
       image_default: "",
       counter: 0,
       openTab: 1,
+      isLoaded: false,
       hooperSettings: {
         itemsToShow: 3,
         wheelControl: false,
@@ -216,6 +263,9 @@ export default {
     };
   },
   methods: {
+    onImgLoad() {
+      return (this.isLoaded = true);
+    },
     changeTab(value) {
       this.openTab = value;
     },

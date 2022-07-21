@@ -316,7 +316,9 @@
             scroll
           "
         >
+          <h1 v-if="productItems.length == []">Please wait...</h1>
           <div
+            v-else
             v-for="(row, index) in productItems"
             :key="index"
             class="col-span-2"
@@ -343,10 +345,13 @@ export default {
     ...mapGetters({
       productItems: "productItems",
       total: "total",
+      keyword: "keyword",
     }),
   },
   created() {
-    this.$store.dispatch("getProductItems");
+    if (this.keyword == "") {
+      this.$store.dispatch("getProductItems");
+    }
   },
   watch: {
     "params.limit": function () {
@@ -391,6 +396,7 @@ export default {
       try {
         this.$emit("loading", (this.isLoading = true));
         let params = new URLSearchParams();
+        params.append("keyword", this.keyword);
         params.append("page", this.params.page);
         params.append("limit", this.params.limit);
         params.append("price", this.params.price.toString());
