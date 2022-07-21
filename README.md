@@ -25,7 +25,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="src/assets/img/logo.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Folkatech FE Test</h3>
@@ -75,7 +75,7 @@ This project was created to complete the technical test from Folkatech
 ### Built With
 
 * [![Vue][Vue.js]][Vue-url]
-* [![Tailwind][Tailwindcss.com]][Tailwind-url]
+* [![Tailwind][Tailwindcss.com]][Tailwindcss-url]
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
