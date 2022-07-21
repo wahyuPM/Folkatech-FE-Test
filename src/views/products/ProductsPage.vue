@@ -8,7 +8,7 @@
             <vue-slider
               v-model="params.price"
               :min="5000"
-              :max="200000"
+              :max="500000"
               :order="false"
               :lazy="true"
             >
@@ -340,8 +340,10 @@ export default {
     Product,
   },
   computed: {
-    ...mapGetters(["productItems"]),
-    ...mapGetters(["total"]),
+    ...mapGetters({
+      productItems: "productItems",
+      total: "total",
+    }),
   },
   created() {
     this.$store.dispatch("getProductItems");
@@ -363,19 +365,24 @@ export default {
   data() {
     return {
       products: [],
+      newTotal: 0,
       params: {
         page: 1,
         limit: 10,
-        price: [5000, 100000],
+        price: [5000, 200000],
         order: "product_name,ASC",
       },
       errors: [],
     };
   },
   methods: {
-    ...mapActions(["updateProductList"]),
+    ...mapActions({
+      updateProductList: "updateProductList",
+      updateTotal: "updateTotal",
+    }),
     filterProduct() {
       this.updateProductList(this.products);
+      this.updateTotal(this.newTotal);
     },
     onchangePrice() {
       this.getData();
@@ -400,6 +407,7 @@ export default {
         if (response) {
           this.$emit("loading", (this.isLoading = false));
           this.products = response.data.data.list;
+          this.newTotal = response.data.data.total;
 
           if (this.products.length == []) {
             swal({

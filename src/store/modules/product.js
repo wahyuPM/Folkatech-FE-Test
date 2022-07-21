@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const state = {
     productItems: [],
+    keyword: "",
     total: 0,
 }
 
@@ -11,6 +12,9 @@ const mutations = {
     },
     UPDATE_TOTAL(state, payload) {
         state.total = payload;
+    },
+    UPDATE_KEYWORD(state, payload) {
+        state.keyword = payload
     }
 }
 
@@ -30,8 +34,12 @@ const actions = {
         commit('UPDATE_PRODUCT_ITEMS', payload)
     },
 
-    UpdateTotal: function ({ commit }, payload) {
+    updateTotal: function ({ commit }, payload) {
         commit('UPDATE_TOTAL', payload)
+    },
+
+    updateKeyword: function ({ commit }, payload) {
+        commit('UPDATE_KEYWORD', payload)
     }
 }
 

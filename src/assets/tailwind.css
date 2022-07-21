@@ -7,6 +7,22 @@
     font-family: 'gotham', sans-serif;
 }
 
+.breadcrumb {
+    display: flex;
+    gap: 2rem;
+}
+
+.breadcrumb .breadcrumb-item+.breadcrumb-item:before {
+    display: inline-block;
+    color: #2c3e50;
+    content: ">>";
+    margin-right: 1.2rem;
+}
+
+.breadcrumb .breadcrumb-item span.router-link-exact-active.router-link-active {
+    color: #eb3f36;
+}
+
 @layer utilities {
     .center {
         @apply absolute top-[50%] left-[50%]  ;

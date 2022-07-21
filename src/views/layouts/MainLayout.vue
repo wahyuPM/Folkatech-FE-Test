@@ -1,9 +1,9 @@
 <template>
   <main class="mx-auto w-full 2xl:w-[1440px] flex flex-col min-h-screen">
-    <Header />
+    <Header @loading="LoadingScreen" />
     <div class="p-[80px] mb-2"></div>
-    <div class="bg-white px-10 py-8 w-full">
-      <router-link to="/home">Home >></router-link>
+    <div class="bg-white px-10 py-8 w-full flex gap-2">
+      <Breadcrumbs />
     </div>
     <router-view @loading="LoadingScreen"></router-view>
     <vue-element-loading :active="isLoading" is-full-screen />
@@ -35,3 +35,5 @@ export default {
   },
 };
 </script>
+<style scoped>
+</style>

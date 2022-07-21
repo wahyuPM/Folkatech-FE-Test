@@ -177,7 +177,7 @@ export default {
           Vue.prototype.$http.defaults.headers.common["Authorization"] =
             "Bearer " + auth.token;
 
-          this.$router.push("/home");
+          this.$router.push("/produk");
         }
       } catch (error) {
         this.$emit("loading", (this.isLoading = false));

@@ -3,10 +3,12 @@ import App from './App.vue'
 import router from './router'
 import axios from 'axios'
 import store from './store'
+import VueBreadcrumbs from 'vue-2-breadcrumbs';
 import VueSlider from 'vue-slider-component'
 import 'vue-slider-component/theme/default.css'
 
 Vue.component('VueSlider', VueSlider)
+Vue.use(VueBreadcrumbs);
 
 Vue.config.productionTip = false
 Vue.prototype.$http = axios;

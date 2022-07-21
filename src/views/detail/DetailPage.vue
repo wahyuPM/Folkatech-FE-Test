@@ -1,29 +1,39 @@
 <template>
   <div class="container mx-auto px-8">
-    <div class="grid grid-cols-12 mb-6 gap-2">
+    <div class="grid grid-cols-12 grid-flow-dense h-max gap-2">
       <div class="col-start-1 col-end-6">
-        <div class="border border-black flex justify-center items-center">
-          <img src="@/assets/img/image61.png" alt="" class="h-auto w-full" />
+        <div class="border border-[#D8D8D8] flex justify-center items-center">
+          <img
+            v-if="image_default === ''"
+            :src="detail.images[0].image_url"
+            :alt="detail.images[0].id"
+            class="h-auto w-full"
+          />
+          <img
+            v-else
+            :src="image_default"
+            :alt="image_default"
+            class="h-auto w-full"
+          />
         </div>
         <div class="my-4">
           <hooper :settings="hooperSettings">
-            <slide>
+            <slide v-for="index in image_list" :key="index">
               <div
+                @click.prevent="changeDefaultImage(index)"
                 class="
                   border
                   flex
                   justify-center
                   items-center
                   h-full
-                  border-black
+                  border-[#D8D8D8]
+                  p-2
+                  mr-2
+                  cursor-pointer
                 "
               >
-                <img
-                  class="h-auto w-full"
-                  src="@/assets/img/image61.png"
-                  id="0"
-                  alt="img-galery"
-                />
+                <img class="h-auto w-[80%]" :src="index" :alt="index" />
               </div>
             </slide>
             <hooper-navigation slot="hooper-addons"></hooper-navigation>
@@ -106,8 +116,63 @@
             </div>
           </div>
           <p class="text-[#696969] text-lg leading-8">
-            {{ detail.description }}
+            {{ detail.short_description }}
           </p>
+        </div>
+      </div>
+      <div class="col-start-1 col-end-13">
+        <div class="w-full flex flex-col gap-5 justify-center">
+          <ul
+            class="flex list-none flex-wrap mt-3 mb-4 flex-row justify-center"
+            role="tablist"
+          >
+            <li
+              :class="
+                `text-center border-b-[3px] ` +
+                (openTab === 1 ? 'border-b-[#EB3F36]' : 'border-b-white')
+              "
+            >
+              <button
+                @click.prevent="changeTab(1)"
+                type="button"
+                :class="
+                  `text-2xl font-bold uppercase px-10 py-3 block leading-normal hover:text-[#EB3F36] ` +
+                  (openTab === 1 ? 'text-[#EB3F36]' : 'text-[#BEBEBE]')
+                "
+              >
+                Deskripsi
+              </button>
+            </li>
+            <li
+              :class="
+                `text-center border-b-[3px] ` +
+                (openTab === 2 ? 'border-b-[#EB3F36]' : 'border-b-white')
+              "
+            >
+              <button
+                @click.prevent="changeTab(2)"
+                type="button"
+                :class="
+                  `text-2xl font-bold uppercase px-10 py-3 block leading-normal hover:text-[#EB3F36] ` +
+                  (openTab === 2 ? 'text-[#EB3F36]' : 'text-[#BEBEBE]')
+                "
+              >
+                Informasi
+              </button>
+            </li>
+          </ul>
+          <div class="relative break-word w-full p-4">
+            <div class="px-3 py-5 min-h-[20rem]">
+              <div :class="openTab === 1 ? 'block w-full' : 'hidden'" id="tab1">
+                <p class="text-[#696969] text-normal leading-6">
+                  {{ detail.description }}
+                </p>
+              </div>
+              <div :class="openTab === 2 ? 'block w-full' : 'hidden'" id="tab2">
+                <p class="text-[#696969] text-normal leading-6">Comming Soon</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -125,26 +190,38 @@ export default {
   },
   created() {
     this.detail = this.$store.getters.productItemById(this.$route.params.id);
+    this.detail.images.forEach((item) => {
+      return this.image_list.push(item.image_url);
+    });
   },
   data() {
     return {
       detail: null,
+      image_list: [],
+      image_default: "",
       counter: 0,
+      openTab: 1,
       hooperSettings: {
-        itemsToShow: 5,
+        itemsToShow: 3,
         wheelControl: false,
         breakpoints: {
           375: {
             itemsToShow: 3,
           },
           1000: {
-            itemsToShow: 5,
+            itemsToShow: 3,
           },
         },
       },
     };
   },
   methods: {
+    changeTab(value) {
+      this.openTab = value;
+    },
+    changeDefaultImage(index) {
+      this.image_default = index;
+    },
     changeCounter: function (num) {
       this.counter += +num;
       !isNaN(this.counter) && this.counter > 0
@@ -162,6 +239,18 @@ export default {
 <style scoped>
 .hooper {
   padding: 0;
-  height: 120px;
+  height: 150px;
+}
+.hooper >>> .hooper-prev {
+  left: -20px;
+  background-color: #d8d8d8 !important;
+  border-radius: 50% !important;
+  padding: 0.5rem;
+}
+.hooper >>> .hooper-next {
+  right: -20px;
+  background-color: #d8d8d8 !important;
+  border-radius: 50% !important;
+  padding: 0.5rem;
 }
 </style>

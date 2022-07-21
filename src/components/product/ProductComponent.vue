@@ -15,7 +15,8 @@
       h-full
     "
   >
-    <div class="box-border mb-4">
+    <div class="box-border mb-4 min-h-[15rem]">
+      <vue-element-loading :active="!isLoaded" />
       <img
         v-show="isLoaded"
         @load="onImgLoad"
@@ -23,7 +24,6 @@
         :alt="data.images[0].id"
         class="w-full h-auto"
       />
-      <vue-element-loading :active="!isLoaded" />
     </div>
     <div class="flex flex-col gap-2 items-center">
       <h3 class="font-bold text-lg leading-4 uppercase text-center">
@@ -55,11 +55,10 @@ export default {
   methods: {
     detailProduct() {
       this.$router.push({
-        path: `/detail/${this.data.product_type.slug}/${this.data.id}`,
+        path: `/detail/${this.data.product_type.name}/${this.data.id}`,
       });
     },
     onImgLoad() {
-      console.log(` >> isLoaded:`, this.isLoaded);
       return (this.isLoaded = true);
     },
   },

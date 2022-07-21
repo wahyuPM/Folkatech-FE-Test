@@ -7,7 +7,8 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '',
+    name: 'Main',
     component: LoginLayout,
     children: [
       {
@@ -33,26 +34,42 @@ const routes = [
   {
     path: '',
     component: MainLayout,
+    name: 'Home',
+    meta: {
+      breadcrumb: 'Home'
+    },
     children: [
       {
-        path: '/home',
-        name: 'home',
-        component: () => import('../views/home/HomePage.vue'),
+        path: '/produk',
+        name: 'Produk',
+        component: () => import('../views/products/ProductsPage.vue'),
         meta: {
-          title: "Home",
+          title: "Produk",
           requiresAuth: true,
+          breadcrumb: {
+            label: 'Produk',
+            parent: 'Main'
+          }
         }
       },
       {
         path: '/detail/:product_name/:id',
-        name: 'detail',
+        name: 'Detail',
         component: () => import('../views/detail/DetailPage.vue'),
         meta: {
           title: "Detail",
           requiresAuth: true,
+          breadcrumb() {
+            const name = this.$route.params.product_name;
+
+            return {
+              label: name,
+              parent: 'Produk'
+            };
+          }
         }
       }
-    ]
+    ],
   }
 ]
 
@@ -73,7 +90,7 @@ router.beforeEach((to, from, next) => {
     }
   } else if (to.meta.hideForAuth) {
     if (auth) {
-      next('/home')
+      next('/produk')
     } else {
       next()
     }
