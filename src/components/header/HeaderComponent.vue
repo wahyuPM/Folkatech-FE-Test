@@ -3,11 +3,11 @@
     <div class="container mx-auto">
       <div class="bg-white px-6 py-8 flex justify-end items-center">
         <div class="w-[30%] mx-6">
-          <form>
+          <form @submit.prevent="getData">
             <div class="flex">
               <div class="relative w-full">
                 <input
-                  v-model="search"
+                  v-model="params.keyword"
                   type="search"
                   id="search-dropdown"
                   class="
@@ -148,16 +148,75 @@
   </div>
 </template>
 <script>
+import swal from "sweetalert";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
       showDropdown: false,
-      search: "",
+      params: {
+        keyword: "",
+        page: 1,
+        limit: 10,
+        price: "",
+        order: "product_name,ASC",
+      },
+      errors: [],
     };
   },
   methods: {
+    ...mapActions({
+      updateProductList: "updateProductList",
+      updateTotal: "updateTotal",
+    }),
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
+    },
+    async getData() {
+      try {
+        this.$emit("loading", (this.isLoading = true));
+        let params = new URLSearchParams();
+        params.append("keyword", this.params.keyword);
+        params.append("page", this.params.page);
+        params.append("limit", this.params.limit);
+        params.append("price", this.params.price.toString());
+        params.append("order", this.params.order);
+
+        let request = {
+          params: params,
+        };
+        let response = await this.$http.get(
+          `${this.$api_url}/product`,
+          request
+        );
+
+        if (response) {
+          this.$emit("loading", (this.isLoading = false));
+          let products = response.data.data.list;
+          let total = response.data.data.total;
+          this.updateProductList(products);
+          this.updateTotal(total);
+
+          // if (this.$route.path !== "/produk") {
+          //   this.$router.push("/produk");
+          // }
+
+          if (products.length == []) {
+            swal({
+              title: "Warning!",
+              text: `Data not found!`,
+              icon: "warning",
+              buttons: "OK",
+              closeOnClickOutside: false,
+            });
+            return;
+          }
+        }
+      } catch (error) {
+        this.$emit("loading", (this.isLoading = false));
+        this.errors = error.response.data.errors;
+        console.log(error);
+      }
     },
   },
 };
