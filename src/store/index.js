@@ -21,12 +21,20 @@ export default new Vuex.Store({
         ...state.auth,
         ...params
       }
+    },
+    resetAuth(state) {
+      state.auth = {
+        token: null,
+      }
     }
   },
   actions: {
     actionSetAuth({ commit }, params) {
       commit('setAuth', params)
     },
+    actionResetAuth({ commit }) {
+      commit('resetAuth')
+    }
   },
   modules: {
     product,

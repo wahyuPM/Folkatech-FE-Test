@@ -217,7 +217,11 @@
             Rekomendasi Untuk Anda
           </h2>
         </div>
-        <div class="grid grid-cols-9"></div>
+        <div class="grid grid-cols-9">
+          <div class="col-start-1 col-end-10 flex items-center justify-center">
+            <h3 class="my-10">Feutures Under Maintenance</h3>
+          </div>
+        </div>
       </div>
     </div>
   </div>

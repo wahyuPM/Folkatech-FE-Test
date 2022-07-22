@@ -7,12 +7,12 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '',
+    path: '/',
     name: 'Main',
     component: LoginLayout,
     children: [
       {
-        path: '/',
+        path: '',
         name: 'login',
         component: () => import('../views/login/LoginPage.vue'),
         meta: {
@@ -32,15 +32,14 @@ const routes = [
     ]
   },
   {
-    path: '',
+    path: '/produk',
     component: MainLayout,
-    name: 'Home',
     meta: {
       breadcrumb: 'Home'
     },
     children: [
       {
-        path: '/produk',
+        path: '',
         name: 'Produk',
         component: () => import('../views/products/ProductsPage.vue'),
         meta: {

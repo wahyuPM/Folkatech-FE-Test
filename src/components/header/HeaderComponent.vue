@@ -128,6 +128,7 @@
               >
 
               <a
+                @click.prevent="logOut"
                 href="#"
                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                 role="menuitem"
@@ -149,7 +150,7 @@
 </template>
 <script>
 import swal from "sweetalert";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   data() {
     return {
@@ -164,11 +165,17 @@ export default {
       errors: [],
     };
   },
+  computed: {
+    ...mapGetters({
+      auth: "getAuth",
+    }),
+  },
   methods: {
     ...mapActions({
       updateProductList: "updateProductList",
       updateTotal: "updateTotal",
       updateKeyword: "updateKeyword",
+      actionResetAuth: "actionResetAuth",
     }),
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
@@ -200,7 +207,7 @@ export default {
           this.updateKeyword(this.params.keyword);
 
           if (this.$router.path !== "/produk") {
-            this.$router.push("/produk");
+            this.$router.push("/produk").catch(() => {});
           }
 
           if (products.length == []) {
@@ -219,6 +226,26 @@ export default {
         this.errors = error.response.data.errors;
         console.log(error);
       }
+    },
+    logOut() {
+      swal({
+        title: "Apakah anda yakin logout?",
+        icon: "warning",
+        buttons: ["Cancel", "Iya"],
+        dangerMode: true,
+      })
+        .then((willLogout) => {
+          if (willLogout) {
+            localStorage.removeItem("auth");
+            this.actionResetAuth();
+            this.$router.push({
+              path: "/",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
