@@ -67,7 +67,7 @@
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 [![Product Name Screen Shot][product-screenshot-2]](https://example.com)
 
-This project was created to complete the technical test from Folkatech. this project built with vue.js tailwindcss vuex vue-router
+This project was created to complete the technical test from Folkatech. this project built with vue.js, tailwindcss, vuex and vue-router. at this time the project not mobile responsive. 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
